@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ЧУДЕСА — генератор идей</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1a2420;
+      --muted: #4a5a52;
+      --paper: #f3f0e8;
+      --leaf: #2f6b4f;
+      --leaf-deep: #1e4a36;
+      --gold: #c4a35a;
+      --line: rgba(26, 36, 32, 0.12);
+      --card: rgba(255, 255, 255, 0.72);
+      --shadow: 0 18px 40px rgba(30, 50, 40, 0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 50% at 10% -10%, rgba(196, 163, 90, 0.28), transparent 55%),
+        radial-gradient(ellipse 70% 45% at 100% 0%, rgba(47, 107, 79, 0.18), transparent 50%),
+        linear-gradient(165deg, #e8efe8 0%, var(--paper) 45%, #ebe4d4 100%);
+      padding: 2rem 1.25rem 3rem;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: rise 0.7s ease both;
+    }
+
+    .brand {
+      font-family: "Literata", serif;
+      font-size: clamp(2.8rem, 8vw, 4.5rem);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--leaf-deep);
+      line-height: 1;
+    }
+
+    .subtitle {
+      margin-top: 0.75rem;
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 34rem;
+      margin-inline: auto;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 2rem;
+      animation: rise 0.7s ease 0.1s both;
+    }
+
+    label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    select {
+      font: inherit;
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 0.55rem 0.8rem;
+      min-width: 11rem;
+    }
+
+    button {
+      font: inherit;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 0.75rem 1.4rem;
+      transition: transform 0.15s ease, background 0.2s ease;
+    }
+
+    button:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: var(--leaf);
+      color: #f7faf7;
+      box-shadow: 0 8px 20px rgba(47, 107, 79, 0.28);
+    }
+
+    .btn-primary:hover { background: var(--leaf-deep); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--leaf-deep);
+      border: 1px solid rgba(47, 107, 79, 0.35);
+    }
+
+    .btn-ghost:hover { background: rgba(47, 107, 79, 0.08); }
+
+    .week {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .day {
+      background: var(--card);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 1.15rem 1.25rem 1.3rem;
+      box-shadow: var(--shadow);
+      animation: rise 0.55s ease both;
+    }
+
+    .day:nth-child(1) { animation-delay: 0.05s; }
+    .day:nth-child(2) { animation-delay: 0.1s; }
+    .day:nth-child(3) { animation-delay: 0.15s; }
+    .day:nth-child(4) { animation-delay: 0.2s; }
+    .day:nth-child(5) { animation-delay: 0.25s; }
+    .day:nth-child(6) { animation-delay: 0.3s; }
+    .day:nth-child(7) { animation-delay: 0.35s; }
+
+    .day-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 0.9rem;
+      padding-bottom: 0.65rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .day-name {
+      font-family: "Literata", serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--leaf-deep);
+    }
+
+    .theme {
+      font-size: 0.85rem;
+      color: var(--gold);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .block { margin-top: 0.85rem; }
+
+    .label {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--leaf);
+      margin-bottom: 0.35rem;
+    }
+
+    .post {
+      font-size: 1.02rem;
+      line-height: 1.45;
+      font-weight: 600;
+    }
+
+    .stories {
+      list-style: none;
+      display: grid;
+      gap: 0.45rem;
+      margin-top: 0.25rem;
+    }
+
+    .stories li {
+      position: relative;
+      padding-left: 1.1rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .stories li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 3rem 1rem;
+      border: 1px dashed var(--line);
+      border-radius: 18px;
+      animation: rise 0.5s ease both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 560px) {
+      .day-head { flex-direction: column; align-items: flex-start; }
+      .controls { flex-direction: column; }
+      select, button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1 class="brand">ЧУДЕСА</h1>
+      <p class="subtitle">Генератор идей: 1 пост + 3 сторис на каждый день недели</p>
+    </header>
+
+    <div class="controls">
+      <label>
+        Ниша
+        <select id="niche">
+          <option value="lifestyle">Лайфстайл</option>
+          <option value="beauty">Красота</option>
+          <option value="food">Еда</option>
+          <option value="travel">Путешествия</option>
+          <option value="business">Бизнес / эксперт</option>
+          <option value="mom">Мамы / семья</option>
+          <option value="mind">Психология / саморазвитие</option>
+        </select>
+      </label>
+      <button class="btn-primary" id="generate" type="button">Сгенерировать неделю</button>
+      <button class="btn-ghost" id="copy" type="button" hidden>Скопировать план</button>
+    </div>
+
+    <div class="week" id="week">
+      <div class="empty">Нажми «Сгенерировать неделю» — появятся идеи на 7 дней</div>
+    </div>
+  </div>
+
+  <script>
+    const DAYS = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
+
+    const THEMES = [
+      "Знакомство", "Польза", "За кулисами", "Эмоция", "Экспертность",
+      "История", "Вовлечение", "Вдохновение", "Результат", "Лёгкость"
+    ];
+
+    const BANK = {
+      lifestyle: {
+        posts: [
+          "Утро, которое меняет настроение: мой простой ритуал",
+          "5 маленьких чудес обычного дня",
+          "Что я перестала делать — и сразу стало легче",
+          "Домашний уют за 15 минут: чек-лист",
+          "Один предмет, который сделал дом уютнее",
+          "Как я планирую неделю без перфекционизма",
+          "Мой любимый вечер недели — и почему он важен",
+          "Тихие радости, которые я замечаю каждый день"
+        ],
+        stories: [
+          "Доброе утро + план на день в 3 кадрах",
+          "Что в сумке / на столе сегодня",
+          "Мини-опрос: что выбираешь ты?",
+          "Быстрый лайфхак дня",
+          "Кадр «до / после»",
+          "Музыка дня + настроение",
+          "Вопрос подписчикам в стикере",
+          "Секретный совет вечера",
+          "Кадр из окна / прогулки",
+          "Итог дня в одном предложении"
+        ]
+      },
+      beauty: {
+        posts: [
+          "Уход, который реально работает: мой честный разбор",
+          "Чудо-трансформация за 7 дней: что изменилось",
+          "3 ошибки в макияже, которые я больше не делаю",
+          "Бюджетный продукт vs люкс — что выиграло",
+          "Ритуал вечернего ухода без спешки",
+          "Как я выбираю аромат под настроение",
+          "Моя «капсула» косметики на неделю",
+          "Кожа после стресса: что помогло быстрее всего"
+        ],
+        stories: [
+          "Свачи / текстура продукта крупным планом",
+          "Наношу средство — короткий процесс",
+          "До / после на одном лице",
+          "Опрос: какой продукт взять в путешествие?",
+          "Совет по нанесению за 15 секунд",
+          "Что в косметичке сегодня",
+          "Отзыв честный: купила бы снова?",
+          "Макияж за 60 секунд",
+          "Вопрос: сухая или жирная кожа?",
+          "Вечерний уход — 3 шага"
+        ]
+      },
+      food: {
+        posts: [
+          "Рецепт за 20 минут, который спасает будни",
+          "Завтрак-чудо: сытно, красиво, просто",
+          "Как я собираю тарелку «как в кафе» дома",
+          "Один продукт — три блюда на неделю",
+          "Сладкое без чувства вины: мой любимый вариант",
+          "Что приготовить, когда совсем нет сил",
+          "Семейный ужин, который все просят повторить",
+          "Список покупок на неделю без хаоса"
+        ],
+        stories: [
+          "Ингредиенты на столе — старт готовки",
+          "Процесс: нарезка / замес / обжарка",
+          "Готовое блюдо + крупный план",
+          "Опрос: сладкое или солёное?",
+          "Лайфхак на кухне дня",
+          "Что в холодильнике сегодня",
+          "Дегустация: оценка от 1 до 10",
+          "Рецепт в стикерах (шаги)",
+          "Завтрак в кадре",
+          "Вечерний чай / десерт"
+        ]
+      },
+      travel: {
+        posts: [
+          "Маршрут выходного дня: мало времени — много впечатлений",
+          "Место, которое выглядит как чудо — и как туда доехать",
+          "Что взять с собой: мой проверенный минимум",
+          "Ошибка туриста, которую я больше не повторяю",
+          "Кафе / вид / прогулка: идеальный день в городе",
+          "Как я выбираю жильё без разочарований",
+          "Фото-гид: 5 точек для красивых кадров",
+          "Бюджет поездки: куда уходят деньги на самом деле"
+        ],
+        stories: [
+          "Сборы: что в рюкзаке",
+          "Дорога / вид из окна",
+          "Локация дня + геометка",
+          "Опрос: море или горы?",
+          "Совет путешественника за 10 секунд",
+          "Еда в поездке — честный кадр",
+          "Карта дня / план маршрута",
+          "Закат / рассвет — атмосфера",
+          "Вопрос: куда ехать следующим?",
+          "Итог дня в 1 эмодзи + текст"
+        ]
+      },
+      business: {
+        posts: [
+          "Как я упаковала услугу так, что стало понятно за 10 секунд",
+          "Кейс: маленькое действие — заметный результат",
+          "Ошибки в контенте, которые съедают продажи",
+          "Мой чек-лист недели эксперта",
+          "Как я беру цену без стыда",
+          "Что отвечать на «дорого» — мягкий скрипт",
+          "За кулисами: как выглядит мой рабочий день",
+          "Инструмент, который сэкономил мне часы"
+        ],
+        stories: [
+          "Утро эксперта: план задач",
+          "Кадр рабочего стола / ноутбука",
+          "Мини-совет по нише",
+          "Опрос: какая боль актуальнее?",
+          "Отзыв клиента (скрин / цитата)",
+          "Анонс поста / эфира",
+          "FAQ: один частый вопрос",
+          "Цифра дня (результат)",
+          "За кулисами съёмки / созвона",
+          "Призыв: напиши «хочу» в директ"
+        ]
+      },
+      mom: {
+        posts: [
+          "Как мы устраиваем маленькие чудеса в обычных буднях",
+          "Ритуал с ребёнком, который занимает 10 минут",
+          "Честно: что я упростила в материнстве",
+          "Идея совместного вечера без гаджетов",
+          "Как я сохраняю себя, когда день «на нуле»",
+          "Домашняя традиция выходного дня",
+          "Что реально помогает при капризах",
+          "Наш семейный плейлист спокойствия"
+        ],
+        stories: [
+          "Доброе утро семьи",
+          "Момент дня: улыбка / объятие",
+          "Опрос мам: что сложнее сегодня?",
+          "Лайфхак с детьми за 15 секунд",
+          "Завтрак / перекус в кадре",
+          "Прогулка — 2–3 кадра",
+          "Вопрос: как вы отдыхаете?",
+          "Вечерняя рутина",
+          "Честный кадр «без фильтров»",
+          "Итог дня: за что я благодарна"
+        ]
+      },
+      mind: {
+        posts: [
+          "Практика на 5 минут, которая возвращает спокойствие",
+          "Как я замечаю чудеса в серых днях",
+          "Мысль, которая меня освободила",
+          "Антистресс-план на неделю",
+          "Почему «маленькие шаги» работают лучше рывков",
+          "Как я разговариваю с собой в трудный день",
+          "Границы: фраза, которую я наконец сказала",
+          "Вечерняя рефлексия: 3 вопроса себе"
+        ],
+        stories: [
+          "Утренняя аффирмация / мысль дня",
+          "Дыхание: 3 шага на экране",
+          "Опрос: что тревожит сейчас?",
+          "Цитата + короткое пояснение",
+          "Мини-практика «здесь и сейчас»",
+          "Честный статус дня",
+          "Совет, если энергия на нуле",
+          "Вопрос подписчикам в стикере",
+          "Вечерняя благодарность",
+          "Напоминание: тебе можно медленно"
+        ]
+      }
+    };
+
+    const nicheEl = document.getElementById("niche");
+    const weekEl = document.getElementById("week");
+    const generateBtn = document.getElementById("generate");
+    const copyBtn = document.getElementById("copy");
+
+    let lastPlan = null;
+
+    function pick(arr, used) {
+      const available = arr.filter((x) => !used.has(x));
+      const pool = available.length ? available : arr;
+      const item = pool[Math.floor(Math.random() * pool.length)];
+      used.add(item);
+      return item;
+    }
+
+    function generateWeek(niche) {
+      const data = BANK[niche];
+      const usedPosts = new Set();
+      const usedStories = new Set();
+      const usedThemes = new Set();
+
+      return DAYS.map((day) => {
+        const theme = pick(THEMES, usedThemes);
+        const post = pick(data.posts, usedPosts);
+        const stories = [0, 1, 2].map(() => pick(data.stories, usedStories));
+        return { day, theme, post, stories };
+      });
+    }
+
+    function render(plan) {
+      weekEl.innerHTML = plan.map(({ day, theme, post, stories }) => `
+        <article class="day">
+          <div class="day-head">
+            <h2 class="day-name">${day}</h2>
+            <span class="theme">${theme}</span>
+          </div>
+          <div class="block">
+            <span class="label">Пост</span>
+            <p class="post">${post}</p>
+          </div>
+          <div class="block">
+            <span class="label">Сторис × 3</span>
+            <ul class="stories">
+              ${stories.map((s) => `<li>${s}</li>`).join("")}
+            </ul>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function planToText(plan, nicheLabel) {
+      const lines = [`ЧУДЕСА — контент-план на неделю`, `Ниша: ${nicheLabel}`, ""];
+      plan.forEach(({ day, theme, post, stories }) => {
+        lines.push(`${day} — ${theme}`);
+        lines.push(`Пост: ${post}`);
+        lines.push(`Сторис 1: ${stories[0]}`);
+        lines.push(`Сторис 2: ${stories[1]}`);
+        lines.push(`Сторис 3: ${stories[2]}`);
+        lines.push("");
+      });
+      return lines.join("\n");
+    }
+
+    generateBtn.addEventListener("click", () => {
+      lastPlan = generateWeek(nicheEl.value);
+      render(lastPlan);
+      copyBtn.hidden = false;
+      copyBtn.textContent = "Скопировать план";
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      if (!lastPlan) return;
+      const label = nicheEl.options[nicheEl.selectedIndex].text;
+      try {
+        await navigator.clipboard.writeText(planToText(lastPlan, label));
+        copyBtn.textContent = "Скопировано";
+        setTimeout(() => { copyBtn.textContent = "Скопировать план"; }, 1600);
+      } catch {
+        copyBtn.textContent = "Не удалось скопировать";
+      }
+    });
+  </script>
+</body>
+</html>
