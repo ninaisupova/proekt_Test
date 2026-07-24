@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ЧУДЕСА — генератор идей</title>
+  <title>ЧУДЕСА — генератор контента</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -19,6 +19,8 @@
       --line: rgba(200, 204, 212, 0.18);
       --card: rgba(16, 16, 18, 0.88);
       --shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+      --ok: #8fd4a8;
+      --bad: #e8a0a0;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -132,49 +134,69 @@
       margin-top: 1rem;
       color: var(--muted);
       font-size: 1.05rem;
-      max-width: 34rem;
+      max-width: 36rem;
       margin-inline: auto;
       animation: fadeIn 1s ease 0.25s both;
     }
 
-    .controls {
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.25rem;
+      animation: rise 0.8s ease 0.1s both;
+    }
+
+    .panel-title {
+      font-family: "Cinzel", serif;
+      letter-spacing: 0.08em;
+      font-size: 1rem;
+      color: var(--silver-bright);
+      margin-bottom: 0.9rem;
+    }
+
+    .experts {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.65rem;
+    }
+
+    .expert {
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      text-align: center;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted);
+      border-radius: 14px;
+      padding: 0.85rem 0.5rem;
+      font: inherit;
+      font-weight: 600;
+      transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .expert:hover {
+      border-color: rgba(200, 204, 212, 0.4);
+      color: var(--silver);
+    }
+
+    .expert.is-active {
+      color: #0a0a0c;
+      background: linear-gradient(135deg, #9aa0aa 0%, #e8ebf0 45%, #b8bec8 100%);
+      border-color: transparent;
+      box-shadow: 0 0 22px rgba(200, 204, 212, 0.25);
+    }
+
+    .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 0.75rem;
       justify-content: center;
-      align-items: center;
-      margin-bottom: 2rem;
-      animation: rise 0.8s ease 0.12s both;
-    }
-
-    label {
-      font-size: 0.9rem;
-      color: var(--silver-dim);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    select {
-      font: inherit;
-      border: 1px solid var(--line);
-      background: var(--bg-elevated);
-      color: var(--ink);
-      border-radius: 10px;
-      padding: 0.55rem 0.8rem;
-      min-width: 11rem;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    select:focus {
-      outline: none;
-      border-color: rgba(200, 204, 212, 0.55);
-      box-shadow: 0 0 0 3px rgba(200, 204, 212, 0.12);
-    }
-
-    select option {
-      background: #111;
-      color: var(--ink);
+      margin: 1.25rem 0 1.75rem;
+      animation: rise 0.8s ease 0.15s both;
     }
 
     button {
@@ -216,36 +238,26 @@
         0 10px 36px rgba(220, 224, 232, 0.35);
     }
 
-    .btn-ghost {
-      background: transparent;
-      color: var(--silver);
-      border: 1px solid rgba(200, 204, 212, 0.35);
+    .btn-primary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
     }
 
-    .btn-ghost:hover {
-      background: rgba(200, 204, 212, 0.08);
-      border-color: rgba(200, 204, 212, 0.65);
-      box-shadow: 0 0 20px rgba(200, 204, 212, 0.12);
-    }
+    .result { display: grid; gap: 1rem; }
 
-    .week {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .day {
+    .card {
       position: relative;
       background: var(--card);
-      backdrop-filter: blur(10px);
       border: 1px solid var(--line);
       border-radius: 18px;
-      padding: 1.15rem 1.25rem 1.3rem;
+      padding: 1.2rem 1.25rem 1.35rem;
       box-shadow: var(--shadow);
       overflow: hidden;
       animation: riseSilver 0.65s ease both;
     }
 
-    .day::before {
+    .card::before {
       content: "";
       position: absolute;
       top: 0;
@@ -256,53 +268,6 @@
       animation: borderGlow 3.2s ease-in-out infinite;
     }
 
-    .day:hover {
-      border-color: rgba(200, 204, 212, 0.35);
-      box-shadow:
-        var(--shadow),
-        0 0 28px rgba(200, 204, 212, 0.08);
-    }
-
-    .day:nth-child(1) { animation-delay: 0.05s; }
-    .day:nth-child(2) { animation-delay: 0.1s; }
-    .day:nth-child(3) { animation-delay: 0.15s; }
-    .day:nth-child(4) { animation-delay: 0.2s; }
-    .day:nth-child(5) { animation-delay: 0.25s; }
-    .day:nth-child(6) { animation-delay: 0.3s; }
-    .day:nth-child(7) { animation-delay: 0.35s; }
-
-    .day-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 0.75rem;
-      margin-bottom: 0.9rem;
-      padding-bottom: 0.65rem;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .day-name {
-      font-family: "Cinzel", serif;
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      color: var(--silver-bright);
-    }
-
-    .theme {
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      background: linear-gradient(90deg, var(--silver-dim), var(--silver-bright), var(--silver-dim));
-      background-size: 200% 100%;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      animation: silverFlow 3.5s linear infinite;
-    }
-
-    .block { margin-top: 0.85rem; }
-
     .label {
       display: inline-block;
       font-size: 0.72rem;
@@ -310,46 +275,104 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--silver);
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.55rem;
       text-shadow: 0 0 12px rgba(200, 204, 212, 0.35);
     }
 
-    .post {
-      font-size: 1.02rem;
-      line-height: 1.45;
-      font-weight: 600;
-      color: var(--ink);
+    .post-title {
+      font-family: "Cinzel", serif;
+      font-size: 1.25rem;
+      letter-spacing: 0.04em;
+      color: var(--silver-bright);
+      margin-bottom: 0.65rem;
     }
 
-    .stories {
-      list-style: none;
-      display: grid;
-      gap: 0.45rem;
-      margin-top: 0.25rem;
-    }
-
-    .stories li {
-      position: relative;
-      padding-left: 1.1rem;
+    .post-body {
       color: var(--muted);
+      line-height: 1.55;
+      white-space: pre-line;
+    }
+
+    .hook {
+      margin-top: 0.9rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--line);
+      color: var(--ink);
+      font-weight: 600;
+      line-height: 1.45;
+    }
+
+    .quiz-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      align-items: baseline;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .score {
+      font-size: 0.9rem;
+      color: var(--silver);
+      font-weight: 700;
+    }
+
+    .question {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 0.95rem 1rem;
+      margin-bottom: 0.75rem;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .question h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.7rem;
       line-height: 1.4;
     }
 
-    .stories li::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0.55em;
-      width: 0.45rem;
-      height: 0.45rem;
-      border-radius: 50%;
-      background: var(--silver);
-      box-shadow: 0 0 8px rgba(200, 204, 212, 0.7);
-      animation: pulseDot 2.4s ease-in-out infinite;
+    .options {
+      display: grid;
+      gap: 0.45rem;
     }
 
-    .stories li:nth-child(2)::before { animation-delay: 0.4s; }
-    .stories li:nth-child(3)::before { animation-delay: 0.8s; }
+    .option {
+      text-align: left;
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--ink);
+      padding: 0.7rem 0.85rem;
+      font-weight: 600;
+    }
+
+    .option:hover:not(:disabled) {
+      border-color: rgba(200, 204, 212, 0.5);
+      box-shadow: 0 0 16px rgba(200, 204, 212, 0.1);
+    }
+
+    .option:disabled { cursor: default; }
+
+    .option.is-correct {
+      border-color: rgba(143, 212, 168, 0.7);
+      background: rgba(143, 212, 168, 0.12);
+      color: var(--ok);
+    }
+
+    .option.is-wrong {
+      border-color: rgba(232, 160, 160, 0.55);
+      background: rgba(232, 160, 160, 0.1);
+      color: var(--bad);
+    }
+
+    .feedback {
+      margin-top: 0.55rem;
+      font-size: 0.9rem;
+      color: var(--silver-dim);
+      min-height: 1.2em;
+    }
 
     .empty {
       text-align: center;
@@ -367,16 +390,8 @@
     }
 
     @keyframes riseSilver {
-      from {
-        opacity: 0;
-        transform: translateY(18px);
-        box-shadow: 0 0 0 rgba(200, 204, 212, 0);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-        box-shadow: var(--shadow);
-      }
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes silverFlow {
@@ -400,11 +415,6 @@
       50% { opacity: 1; }
     }
 
-    @keyframes pulseDot {
-      0%, 100% { opacity: 0.55; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.25); }
-    }
-
     @keyframes sparkle {
       0%, 100% { opacity: 0; transform: scale(0.6); }
       40%, 60% { opacity: 0.9; transform: scale(1); }
@@ -416,10 +426,8 @@
     }
 
     @media (max-width: 560px) {
-      .day-head { flex-direction: column; align-items: flex-start; }
-      .controls { flex-direction: column; }
-      select, button { width: 100%; }
       .brand { letter-spacing: 0.14em; }
+      .actions button { width: 100%; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -436,294 +444,461 @@
     <span></span><span></span><span></span><span></span>
     <span></span><span></span><span></span><span></span>
   </div>
+
   <div class="wrap">
     <header>
       <h1 class="brand">ЧУДЕСА</h1>
       <div class="brand-line" aria-hidden="true"></div>
-      <p class="subtitle">Генератор идей: 1 пост + 3 сторис на каждый день недели</p>
+      <p class="subtitle">Выбери эксперта — получи познавательный пост на день и мини-тест из 5 вопросов</p>
     </header>
 
-    <div class="controls">
-      <label>
-        Ниша
-        <select id="niche">
-          <option value="lifestyle">Лайфстайл</option>
-          <option value="beauty">Красота</option>
-          <option value="food">Еда</option>
-          <option value="travel">Путешествия</option>
-          <option value="business">Бизнес / эксперт</option>
-          <option value="mom">Мамы / семья</option>
-          <option value="mind">Психология / саморазвитие</option>
-        </select>
-      </label>
-      <button class="btn-primary" id="generate" type="button">Сгенерировать неделю</button>
-      <button class="btn-ghost" id="copy" type="button" hidden>Скопировать план</button>
+    <section class="panel">
+      <h2 class="panel-title">Эксперт</h2>
+      <div class="experts" id="experts" role="listbox" aria-label="Выбор эксперта"></div>
+    </section>
+
+    <div class="actions">
+      <button class="btn-primary" id="generate" type="button" disabled>Сгенерировать</button>
     </div>
 
-    <div class="week" id="week">
-      <div class="empty">Нажми «Сгенерировать неделю» — появятся идеи на 7 дней</div>
+    <div class="result" id="result">
+      <div class="empty">Выбери эксперта и нажми «Сгенерировать»</div>
     </div>
   </div>
 
   <script>
-    const DAYS = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
-
-    const THEMES = [
-      "Знакомство", "Польза", "За кулисами", "Эмоция", "Экспертность",
-      "История", "Вовлечение", "Вдохновение", "Результат", "Лёгкость"
+    const EXPERTS = [
+      { id: "photo", name: "Фотограф" },
+      { id: "psych", name: "Психолог" },
+      { id: "coach", name: "Тренер" },
+      { id: "nutri", name: "Нутрициолог" },
+      { id: "style", name: "Стилист" },
+      { id: "speech", name: "Логопед" },
+      { id: "finance", name: "Финансовый советник" },
+      { id: "career", name: "Карьерный коуч" }
     ];
 
-    const BANK = {
-      lifestyle: {
+    const CONTENT = {
+      photo: {
         posts: [
-          "Утро, которое меняет настроение: мой простой ритуал",
-          "5 маленьких чудес обычного дня",
-          "Что я перестала делать — и сразу стало легче",
-          "Домашний уют за 15 минут: чек-лист",
-          "Один предмет, который сделал дом уютнее",
-          "Как я планирую неделю без перфекционизма",
-          "Мой любимый вечер недели — и почему он важен",
-          "Тихие радости, которые я замечаю каждый день"
+          {
+            title: "Свет решает всё: почему «плохое фото» часто просто плохо освещено",
+            body: "Камера ловит не красоту — она ловит свет. Жёсткий потолочный свет даёт тени под глазами, а мягкий боковой делает лицо объёмным.\n\nПопробуй правило: источник света сбоку и чуть выше лица. Даже у окна в пасмурный день портрет выглядит живее, чем при вспышке в лоб.\n\nПознавательный факт: отражённый свет (от стены или отражателя) мягче прямого — поэтому «белый лист бумаги» рядом с лицом работает как мини-студия.",
+            hook: "А ты чаще снимаешь у окна или при искусственном свете? Напиши в комментариях — разберём твой типичный сценарий."
+          },
+          {
+            title: "Композиция за 10 секунд: как сделать кадр «дороже»",
+            body: "Дорогая картинка — это не обязательно дорогая камера. Часто хватает трёх приёмов: чистый фон, воздух вокруг героя и один акцент.\n\nУбери лишнее из кадра. Сдвинь объект с центра по правилу третей. Оставь пространство «взгляду» — туда, куда смотрит человек.\n\nВовлечение начинается с узнавания: зритель должен понять сюжет за секунду.",
+            hook: "Сохрани пост и отметь друга, которому вечно «режет» кадр по локтям."
+          }
         ],
-        stories: [
-          "Доброе утро + план на день в 3 кадрах",
-          "Что в сумке / на столе сегодня",
-          "Мини-опрос: что выбираешь ты?",
-          "Быстрый лайфхак дня",
-          "Кадр «до / после»",
-          "Музыка дня + настроение",
-          "Вопрос подписчикам в стикере",
-          "Секретный совет вечера",
-          "Кадр из окна / прогулки",
-          "Итог дня в одном предложении"
+        quiz: [
+          {
+            q: "Какой свет обычно делает портрет мягче?",
+            options: ["Жёсткий прямой свет в лицо", "Рассеянный / отражённый свет", "Вспышка без рассеивателя"],
+            correct: 1
+          },
+          {
+            q: "Что чаще всего портит композицию?",
+            options: ["Чистый фон", "Лишние объекты за спиной", "Воздух вокруг героя"],
+            correct: 1
+          },
+          {
+            q: "Правило третей помогает…",
+            options: ["Только в пейзаже", "Разместить объект не по центру выразительнее", "Увеличить ISO"],
+            correct: 1
+          },
+          {
+            q: "Почему важно оставлять «воздух взгляду»?",
+            options: ["Чтобы кадр не выглядел «зажатым»", "Чтобы увеличить резкость", "Чтобы убрать шумы"],
+            correct: 0
+          },
+          {
+            q: "Что сильнее влияет на «дорогой» вид фото?",
+            options: ["Только бренд камеры", "Свет + композиция + чистота кадра", "Только фильтр в приложении"],
+            correct: 1
+          }
         ]
       },
-      beauty: {
+      psych: {
         posts: [
-          "Уход, который реально работает: мой честный разбор",
-          "Чудо-трансформация за 7 дней: что изменилось",
-          "3 ошибки в макияже, которые я больше не делаю",
-          "Бюджетный продукт vs люкс — что выиграло",
-          "Ритуал вечернего ухода без спешки",
-          "Как я выбираю аромат под настроение",
-          "Моя «капсула» косметики на неделю",
-          "Кожа после стресса: что помогло быстрее всего"
+          {
+            title: "Почему «просто успокойся» почти никогда не работает",
+            body: "Нервная система не слушает приказы — она реагирует на безопасность. Когда нам говорят «не переживай», мозг слышит обесценивание, а тревога растёт.\n\nРабочий путь: назвать чувство («мне тревожно»), дать телу опору (дыхание, стопы на полу) и только потом решать задачу.\n\nПознавательно: эмоция — сигнал, а не враг. Она указывает на потребность: в отдыхе, ясности, поддержке или границах.",
+            hook: "Какая фраза тебя обычно бесит в стрессе? Напиши — соберём «антискрипт» из комментариев."
+          },
+          {
+            title: "Маленькие границы = большая энергия",
+            body: "Граница — это не стена. Это ясное «да» и честное «нет». Без них мы тратим силы на чужие ожидания и злимся «вдруг».\n\nНачни с микро-границы: отвечать на сообщения в своё время, не брать работу «на 5 минут» вечером, просить паузу в споре.\n\nВовлечение: люди узнают себя мгновенно — и хотят поделиться своим опытом.",
+            hook: "Поставь «+», если сегодня скажешь одно спокойное «нет»."
+          }
         ],
-        stories: [
-          "Свачи / текстура продукта крупным планом",
-          "Наношу средство — короткий процесс",
-          "До / после на одном лице",
-          "Опрос: какой продукт взять в путешествие?",
-          "Совет по нанесению за 15 секунд",
-          "Что в косметичке сегодня",
-          "Отзыв честный: купила бы снова?",
-          "Макияж за 60 секунд",
-          "Вопрос: сухая или жирная кожа?",
-          "Вечерний уход — 3 шага"
+        quiz: [
+          {
+            q: "Что чаще помогает снизить тревогу быстрее приказа «успокоиться»?",
+            options: ["Игнорировать чувство", "Назвать чувство и опереться на тело", "Спорить с собой сильнее"],
+            correct: 1
+          },
+          {
+            q: "Граница — это…",
+            options: ["Всегда конфликт", "Ясность своих «да» и «нет»", "Полный отказ от общения"],
+            correct: 1
+          },
+          {
+            q: "Эмоция чаще всего сигнализирует о…",
+            options: ["Слабости характера", "Потребности", "Необходимости всё бросить"],
+            correct: 1
+          },
+          {
+            q: "Микро-граница — это пример…",
+            options: ["Отвечать сразу всем", "Не брать «ещё одну мелочь» поздно вечером", "Молчать и копить"],
+            correct: 1
+          },
+          {
+            q: "Почему обесценивание усиливает тревогу?",
+            options: ["Мозг чувствует небезопасность и непонимание", "Потому что слова длинные", "Потому что так всегда полезно"],
+            correct: 0
+          }
         ]
       },
-      food: {
+      coach: {
         posts: [
-          "Рецепт за 20 минут, который спасает будни",
-          "Завтрак-чудо: сытно, красиво, просто",
-          "Как я собираю тарелку «как в кафе» дома",
-          "Один продукт — три блюда на неделю",
-          "Сладкое без чувства вины: мой любимый вариант",
-          "Что приготовить, когда совсем нет сил",
-          "Семейный ужин, который все просят повторить",
-          "Список покупок на неделю без хаоса"
+          {
+            title: "Прогресс быстрее, если тренировка короче — но регулярнее",
+            body: "Мотивация любит длинные планы. Результат любит повторяемость. 25–40 минут 3–4 раза в неделю часто сильнее редких «геройских» двухчасовых забегов.\n\nСекрет вовлечения тела: разминка → основная работа → короткая заминка. Так меньше травм и больше желания вернуться завтра.\n\nФакт: мышцы растут в восстановлении. Без сна и белка «идеальная» тренировка работает вполовину.",
+            hook: "Сколько минут реально готов(а) тренироваться в будни без самообмана? Напиши цифру."
+          },
+          {
+            title: "Техника важнее веса: как не «убить» поясницу",
+            body: "Большой вес с кривой техникой — это ускоренный путь к паузе. Начни с контроля: корпус стабилен, колени смотрят по направлению носков, движение контролируемое.\n\nЛучший индикатор: ты можешь сделать подход и спокойно говорить 1–2 фразы. Если только хрип и хаос — снижай нагрузку.\n\nПознавательно и вовлекающе: правильная техника — это уважение к будущему себе.",
+            hook: "Сохрани и отметь напарника по залу — пусть проверит твою технику на видео."
+          }
         ],
-        stories: [
-          "Ингредиенты на столе — старт готовки",
-          "Процесс: нарезка / замес / обжарка",
-          "Готовое блюдо + крупный план",
-          "Опрос: сладкое или солёное?",
-          "Лайфхак на кухне дня",
-          "Что в холодильнике сегодня",
-          "Дегустация: оценка от 1 до 10",
-          "Рецепт в стикерах (шаги)",
-          "Завтрак в кадре",
-          "Вечерний чай / десерт"
+        quiz: [
+          {
+            q: "Что чаще даёт устойчивый прогресс?",
+            options: ["Редкие сверхдлинные тренировки", "Регулярные умеренные занятия", "Только отдых без нагрузки"],
+            correct: 1
+          },
+          {
+            q: "Когда мышцы в основном восстанавливаются и адаптируются?",
+            options: ["Только во время подхода", "В восстановлении (сон, питание, пауза)", "Только при максимальном весе"],
+            correct: 1
+          },
+          {
+            q: "Признак, что нагрузка слишком хаотичная:",
+            options: ["Контроль и ровное дыхание", "Нельзя сохранить технику", "Лёгкая разминка"],
+            correct: 1
+          },
+          {
+            q: "Зачем нужна заминка?",
+            options: ["Чтобы «сжечь» калории магически", "Плавно завершить нагрузку и снизить риск скованности", "Чтобы увеличить вес на штанге"],
+            correct: 1
+          },
+          {
+            q: "Колени в приседе лучше направлять…",
+            options: ["Сильно внутрь", "По направлению носков / стабильно наружу по технике", "Куда получится"],
+            correct: 1
+          }
         ]
       },
-      travel: {
+      nutri: {
         posts: [
-          "Маршрут выходного дня: мало времени — много впечатлений",
-          "Место, которое выглядит как чудо — и как туда доехать",
-          "Что взять с собой: мой проверенный минимум",
-          "Ошибка туриста, которую я больше не повторяю",
-          "Кафе / вид / прогулка: идеальный день в городе",
-          "Как я выбираю жильё без разочарований",
-          "Фото-гид: 5 точек для красивых кадров",
-          "Бюджет поездки: куда уходят деньги на самом деле"
+          {
+            title: "Белок на завтрак — тихий лайфхак сытости",
+            body: "Если к обеду тебя «несёт» к сладкому, часто дело не в силе воли, а в завтраке из быстрого сахара.\n\nДобавь белок: яйца, творог, йогурт, рыбу, бобовые. Сытость держится дольше, энергия ровнее, меньше срывов.\n\nПознавательно: клетчатка + белок + вода работают лучше любого «запрета на печенье».",
+            hook: "Какой белковый завтрак тебе реалистичен в будни? Делись вариантом — соберём топ из комментариев."
+          },
+          {
+            title: "Вода не лечит всё, но спасает многое",
+            body: "Лёгкая головная боль, «туман» и тяга к перекусам иногда маскируют жажду. Начни день со стакана воды и держи бутылку рядом с ноутбуком.\n\nНе нужно литрами насиловать себя: ориентир — регулярные глотки и цвет мочи светлее тёмно-жёлтого.\n\nВовлечение работает через простоту: маленький шаг → ощутимый эффект → человек возвращается за следующим советом.",
+            hook: "Поставь «💧», если сегодня выпьешь воду до кофе."
+          }
         ],
-        stories: [
-          "Сборы: что в рюкзаке",
-          "Дорога / вид из окна",
-          "Локация дня + геометка",
-          "Опрос: море или горы?",
-          "Совет путешественника за 10 секунд",
-          "Еда в поездке — честный кадр",
-          "Карта дня / план маршрута",
-          "Закат / рассвет — атмосфера",
-          "Вопрос: куда ехать следующим?",
-          "Итог дня в 1 эмодзи + текст"
+        quiz: [
+          {
+            q: "Что чаще помогает дольше держать сытость утром?",
+            options: ["Только сладкий кофе", "Белок в завтраке", "Пропуск завтрака всегда"],
+            correct: 1
+          },
+          {
+            q: "Клетчатка полезна, потому что…",
+            options: ["Заменяет сон", "Поддерживает сытость и работу ЖКТ", "Убирает необходимость пить воду"],
+            correct: 1
+          },
+          {
+            q: "Тяга к сладкому днём иногда связана с…",
+            options: ["Только ленью", "Резкими скачками энергии после «пустого» завтрака", "Фазой луны"],
+            correct: 1
+          },
+          {
+            q: "Разумный ориентир по воде:",
+            options: ["Пить только когда очень плохо", "Регулярно небольшими порциями в течение дня", "3 литра залпом утром"],
+            correct: 1
+          },
+          {
+            q: "Что лучше «запрета на печенье»?",
+            options: ["Жёсткий срыв через день", "Сбалансированная тарелка и понятный план", "Голодание до вечера всегда"],
+            correct: 1
+          }
         ]
       },
-      business: {
+      style: {
         posts: [
-          "Как я упаковала услугу так, что стало понятно за 10 секунд",
-          "Кейс: маленькое действие — заметный результат",
-          "Ошибки в контенте, которые съедают продажи",
-          "Мой чек-лист недели эксперта",
-          "Как я беру цену без стыда",
-          "Что отвечать на «дорого» — мягкий скрипт",
-          "За кулисами: как выглядит мой рабочий день",
-          "Инструмент, который сэкономил мне часы"
+          {
+            title: "База сначала: почему капсула экономит нервы",
+            body: "Стиль начинается не с тренда, а с 5–7 вещей, которые сочетаются между собой. Когда база собрана, новые покупки перестают быть хаосом.\n\nПроверь: нейтральные низы, 2–3 верха, один акцент и удобная обувь. Если вещь не стыкуется минимум с тремя другими — ей сложно в гардеробе.\n\nПознавательно и вовлекающе: капсула — это не скука, это свобода утра.",
+            hook: "Какая вещь у тебя «работает» чаще всего? Напиши — разберём, почему она универсальна."
+          }
         ],
-        stories: [
-          "Утро эксперта: план задач",
-          "Кадр рабочего стола / ноутбука",
-          "Мини-совет по нише",
-          "Опрос: какая боль актуальнее?",
-          "Отзыв клиента (скрин / цитата)",
-          "Анонс поста / эфира",
-          "FAQ: один частый вопрос",
-          "Цифра дня (результат)",
-          "За кулисами съёмки / созвона",
-          "Призыв: напиши «хочу» в директ"
+        quiz: [
+          {
+            q: "Капсульный гардероб в первую очередь даёт…",
+            options: ["Больше импульсных покупок", "Понятные сочетания и меньше стресса", "Только чёрный цвет"],
+            correct: 1
+          },
+          {
+            q: "Хороший тест новой вещи:",
+            options: ["Нравится на манекене", "Сочетается минимум с 3 вещами из шкафа", "Есть скидка 70%"],
+            correct: 1
+          },
+          {
+            q: "База обычно включает…",
+            options: ["Только яркие тренды", "Нейтральные сочетаемые основы + акцент", "Только верхнюю одежду"],
+            correct: 1
+          },
+          {
+            q: "Зачем нужна удобная обувь в капсуле?",
+            options: ["Только для спорта", "Чтобы образы реально носились, а не висели", "Чтобы купить меньше носков"],
+            correct: 1
+          },
+          {
+            q: "Тренд лучше добавлять…",
+            options: ["Вместо всей базы", "Точечно, когда база уже собрана", "Не глядя на фигуру и жизнь"],
+            correct: 1
+          }
         ]
       },
-      mom: {
+      speech: {
         posts: [
-          "Как мы устраиваем маленькие чудеса в обычных буднях",
-          "Ритуал с ребёнком, который занимает 10 минут",
-          "Честно: что я упростила в материнстве",
-          "Идея совместного вечера без гаджетов",
-          "Как я сохраняю себя, когда день «на нуле»",
-          "Домашняя традиция выходного дня",
-          "Что реально помогает при капризах",
-          "Наш семейный плейлист спокойствия"
+          {
+            title: "Дикция — это мышца: 3 минуты в день меняют речь",
+            body: "Чёткая речь редко «даётся от природы» полностью. Чаще это тренировка артикуляции, дыхания и темпа.\n\nПопробуй: медленно проговори скороговорку, затем чуть быстрее, сохраняя ясность. Добавь паузы — слушателю так легче следовать за мыслью.\n\nПознавательный крючок: люди доверяют спокойному темпу больше, чем скороговорке без пауз.",
+            hook: "Запиши голосовое с одной фразой до/после упражнения — сравни и отметь прогресс."
+          }
         ],
-        stories: [
-          "Доброе утро семьи",
-          "Момент дня: улыбка / объятие",
-          "Опрос мам: что сложнее сегодня?",
-          "Лайфхак с детьми за 15 секунд",
-          "Завтрак / перекус в кадре",
-          "Прогулка — 2–3 кадра",
-          "Вопрос: как вы отдыхаете?",
-          "Вечерняя рутина",
-          "Честный кадр «без фильтров»",
-          "Итог дня: за что я благодарна"
+        quiz: [
+          {
+            q: "Что чаще улучшает дикцию?",
+            options: ["Только громче говорить", "Регулярные короткие упражнения артикуляции", "Перебивать собеседника"],
+            correct: 1
+          },
+          {
+            q: "Паузы в речи нужны, чтобы…",
+            options: ["Казаться неуверенным", "Дать слушателю время понять мысль", "Заполнить эфир «эээ»"],
+            correct: 1
+          },
+          {
+            q: "Скороговорки полезны, если…",
+            options: ["Глотать окончания", "Сохранять ясность при ускорении", "Кричать"],
+            correct: 1
+          },
+          {
+            q: "Спокойный темп часто воспринимается как…",
+            options: ["Слабость", "Уверенность и ясность", "Скука всегда"],
+            correct: 1
+          },
+          {
+            q: "Лучший формат тренировки речи:",
+            options: ["Раз в месяц марафон на 3 часа", "Короткие ежедневные подходы", "Молчать и ждать чуда"],
+            correct: 1
+          }
         ]
       },
-      mind: {
+      finance: {
         posts: [
-          "Практика на 5 минут, которая возвращает спокойствие",
-          "Как я замечаю чудеса в серых днях",
-          "Мысль, которая меня освободила",
-          "Антистресс-план на неделю",
-          "Почему «маленькие шаги» работают лучше рывков",
-          "Как я разговариваю с собой в трудный день",
-          "Границы: фраза, которую я наконец сказала",
-          "Вечерняя рефлексия: 3 вопроса себе"
+          {
+            title: "Конверт 50/30/20: простая карта денег без Excel-ада",
+            body: "Если бюджет бросаешь на второй день, система слишком сложная. Начни с долей: ~50% нужды, ~30% желания, ~20% подушка и цели.\n\nСначала зафиксируй обязательные траты, потом «хотелки», потом перевод себе в будущее. Автоплатёж на накопления убирает героизм силы воли.\n\nПознавательно: деньги любят правила сильнее, чем мотивационные цитаты.",
+            hook: "Какая категория у тебя «утекает» чаще — доставка, подписки или импульсы? Пиши честно."
+          }
         ],
-        stories: [
-          "Утренняя аффирмация / мысль дня",
-          "Дыхание: 3 шага на экране",
-          "Опрос: что тревожит сейчас?",
-          "Цитата + короткое пояснение",
-          "Мини-практика «здесь и сейчас»",
-          "Честный статус дня",
-          "Совет, если энергия на нуле",
-          "Вопрос подписчикам в стикере",
-          "Вечерняя благодарность",
-          "Напоминание: тебе можно медленно"
+        quiz: [
+          {
+            q: "В схеме 50/30/20 примерно 20% — это…",
+            options: ["Только развлечения", "Накопления и финансовые цели", "Только налоги"],
+            correct: 1
+          },
+          {
+            q: "Что помогает копить стабильнее?",
+            options: ["Вспоминать в конце месяца", "Автоперевод на накопления", "Ждать идеального настроения"],
+            correct: 1
+          },
+          {
+            q: "Сложный бюджет часто проваливается из-за…",
+            options: ["Слишком простой структуры", "Перегруза учёта и потери привычки", "Наличия целей"],
+            correct: 1
+          },
+          {
+            q: "Сначала логично закрыть…",
+            options: ["Все хотелки", "Обязательные нужды", "Только подарки"],
+            correct: 1
+          },
+          {
+            q: "Подписки опасны тем, что…",
+            options: ["Всегда бесплатны", "Тихо списываются и копятся", "Улучшают кредит"],
+            correct: 1
+          }
+        ]
+      },
+      career: {
+        posts: [
+          {
+            title: "Сильное резюме говорит языком результата, а не обязанностей",
+            body: "«Отвечал за отчёты» звучит слабо. «Сократил время подготовки отчёта с 4 часов до 1» — уже история ценности.\n\nФормула: действие + контекст + результат. Даже без больших цифр можно показать качество: скорость, ошибки↓, удовлетворённость клиентов↑.\n\nВовлечение: люди сохраняют такие посты, потому что сразу применяют к своему опыту.",
+            hook: "Перепиши одну строку резюме по формуле и скинь в комментарии — разберём вместе."
+          }
+        ],
+        quiz: [
+          {
+            q: "Сильная формулировка в резюме ближе к…",
+            options: ["Списку обязанностей без эффекта", "Результату и измеримому вкладу", "Общим словам «ответственный»"],
+            correct: 1
+          },
+          {
+            q: "Формула сильной строки:",
+            options: ["Только должность", "Действие + контекст + результат", "Только стаж"],
+            correct: 1
+          },
+          {
+            q: "Если нет больших цифр, можно показать…",
+            options: ["Ничего", "Качество: скорость, ошибки, обратная связь", "Только хобби"],
+            correct: 1
+          },
+          {
+            q: "Слово «ответственный» само по себе…",
+            options: ["Всегда достаточно", "Слабое без примеров", "Заменяет кейсы"],
+            correct: 1
+          },
+          {
+            q: "Зачем переписывать обязанности в результаты?",
+            options: ["Чтобы текст был длиннее", "Чтобы работодатель увидел пользу", "Чтобы скрыть опыт"],
+            correct: 1
+          }
         ]
       }
     };
 
-    const nicheEl = document.getElementById("niche");
-    const weekEl = document.getElementById("week");
+    const expertsEl = document.getElementById("experts");
     const generateBtn = document.getElementById("generate");
-    const copyBtn = document.getElementById("copy");
+    const resultEl = document.getElementById("result");
 
-    let lastPlan = null;
+    let selectedExpert = null;
+    let answered = 0;
+    let correctCount = 0;
 
-    function pick(arr, used) {
-      const available = arr.filter((x) => !used.has(x));
-      const pool = available.length ? available : arr;
-      const item = pool[Math.floor(Math.random() * pool.length)];
-      used.add(item);
-      return item;
-    }
+    EXPERTS.forEach((expert) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "expert";
+      btn.textContent = expert.name;
+      btn.dataset.id = expert.id;
+      btn.setAttribute("role", "option");
+      btn.setAttribute("aria-selected", "false");
+      btn.addEventListener("click", () => selectExpert(expert.id));
+      expertsEl.appendChild(btn);
+    });
 
-    function generateWeek(niche) {
-      const data = BANK[niche];
-      const usedPosts = new Set();
-      const usedStories = new Set();
-      const usedThemes = new Set();
-
-      return DAYS.map((day) => {
-        const theme = pick(THEMES, usedThemes);
-        const post = pick(data.posts, usedPosts);
-        const stories = [0, 1, 2].map(() => pick(data.stories, usedStories));
-        return { day, theme, post, stories };
+    function selectExpert(id) {
+      selectedExpert = id;
+      generateBtn.disabled = false;
+      expertsEl.querySelectorAll(".expert").forEach((btn) => {
+        const active = btn.dataset.id === id;
+        btn.classList.toggle("is-active", active);
+        btn.setAttribute("aria-selected", active ? "true" : "false");
       });
     }
 
-    function render(plan) {
-      weekEl.innerHTML = plan.map(({ day, theme, post, stories }) => `
-        <article class="day">
-          <div class="day-head">
-            <h2 class="day-name">${day}</h2>
-            <span class="theme">${theme}</span>
-          </div>
-          <div class="block">
-            <span class="label">Пост</span>
-            <p class="post">${post}</p>
-          </div>
-          <div class="block">
-            <span class="label">Сторис × 3</span>
-            <ul class="stories">
-              ${stories.map((s) => `<li>${s}</li>`).join("")}
-            </ul>
-          </div>
+    function pick(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function updateScore() {
+      const scoreEl = document.getElementById("score");
+      if (!scoreEl) return;
+      scoreEl.textContent = `Отвечено: ${answered}/5 · Верно: ${correctCount}`;
+    }
+
+    function render(expertId) {
+      const pack = CONTENT[expertId];
+      const post = pick(pack.posts);
+      const expertName = EXPERTS.find((e) => e.id === expertId).name;
+      answered = 0;
+      correctCount = 0;
+
+      resultEl.innerHTML = `
+        <article class="card">
+          <span class="label">Пост дня · ${expertName}</span>
+          <h2 class="post-title">${post.title}</h2>
+          <p class="post-body">${post.body}</p>
+          <p class="hook">${post.hook}</p>
         </article>
-      `).join("");
-    }
+        <section class="card" id="quiz">
+          <div class="quiz-meta">
+            <span class="label">Мини-тест · 5 вопросов</span>
+            <span class="score" id="score">Отвечено: 0/5 · Верно: 0</span>
+          </div>
+          ${pack.quiz.map((item, qi) => `
+            <div class="question" data-q="${qi}">
+              <h3>${qi + 1}. ${item.q}</h3>
+              <div class="options">
+                ${item.options.map((opt, oi) => `
+                  <button type="button" class="option" data-q="${qi}" data-o="${oi}">${opt}</button>
+                `).join("")}
+              </div>
+              <p class="feedback" data-feedback="${qi}"></p>
+            </div>
+          `).join("")}
+        </section>
+      `;
 
-    function planToText(plan, nicheLabel) {
-      const lines = [`ЧУДЕСА — контент-план на неделю`, `Ниша: ${nicheLabel}`, ""];
-      plan.forEach(({ day, theme, post, stories }) => {
-        lines.push(`${day} — ${theme}`);
-        lines.push(`Пост: ${post}`);
-        lines.push(`Сторис 1: ${stories[0]}`);
-        lines.push(`Сторис 2: ${stories[1]}`);
-        lines.push(`Сторис 3: ${stories[2]}`);
-        lines.push("");
+      resultEl.querySelectorAll(".option").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const qi = Number(btn.dataset.q);
+          const oi = Number(btn.dataset.o);
+          const item = pack.quiz[qi];
+          const questionEl = resultEl.querySelector(`.question[data-q="${qi}"]`);
+          if (questionEl.dataset.done === "1") return;
+
+          questionEl.dataset.done = "1";
+          answered += 1;
+          const feedback = resultEl.querySelector(`[data-feedback="${qi}"]`);
+          const options = questionEl.querySelectorAll(".option");
+
+          options.forEach((optBtn) => {
+            optBtn.disabled = true;
+            const idx = Number(optBtn.dataset.o);
+            if (idx === item.correct) optBtn.classList.add("is-correct");
+          });
+
+          if (oi === item.correct) {
+            correctCount += 1;
+            btn.classList.add("is-correct");
+            feedback.textContent = "Верно ✓";
+          } else {
+            btn.classList.add("is-wrong");
+            feedback.textContent = `Неверно. Правильный ответ: «${item.options[item.correct]}»`;
+          }
+
+          updateScore();
+        });
       });
-      return lines.join("\n");
     }
 
     generateBtn.addEventListener("click", () => {
-      lastPlan = generateWeek(nicheEl.value);
-      render(lastPlan);
-      copyBtn.hidden = false;
-      copyBtn.textContent = "Скопировать план";
-    });
-
-    copyBtn.addEventListener("click", async () => {
-      if (!lastPlan) return;
-      const label = nicheEl.options[nicheEl.selectedIndex].text;
-      try {
-        await navigator.clipboard.writeText(planToText(lastPlan, label));
-        copyBtn.textContent = "Скопировано";
-        setTimeout(() => { copyBtn.textContent = "Скопировать план"; }, 1600);
-      } catch {
-        copyBtn.textContent = "Не удалось скопировать";
-      }
+      if (!selectedExpert) return;
+      render(selectedExpert);
+      resultEl.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   </script>
 </body>
