@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ЧУДЕСА — генератор идей</title>
+  <title>ЧУДЕСА — контент эксперта</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -19,6 +19,8 @@
       --line: rgba(200, 204, 212, 0.18);
       --card: rgba(16, 16, 18, 0.88);
       --shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+      --ok: #8fbc8f;
+      --bad: #c47a7a;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -132,49 +134,78 @@
       margin-top: 1rem;
       color: var(--muted);
       font-size: 1.05rem;
-      max-width: 34rem;
+      max-width: 36rem;
       margin-inline: auto;
       animation: fadeIn 1s ease 0.25s both;
     }
 
     .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      justify-content: center;
-      align-items: center;
       margin-bottom: 2rem;
       animation: rise 0.8s ease 0.12s both;
     }
 
-    label {
+    .experts-label {
+      display: block;
       font-size: 0.9rem;
       color: var(--silver-dim);
+      margin-bottom: 0.75rem;
+      text-align: center;
+    }
+
+    .experts {
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      justify-content: center;
+      margin-bottom: 1.25rem;
     }
 
-    select {
-      font: inherit;
+    .expert-chip {
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .expert-chip input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .expert-chip span {
+      display: inline-block;
+      padding: 0.55rem 0.95rem;
       border: 1px solid var(--line);
+      border-radius: 999px;
       background: var(--bg-elevated);
-      color: var(--ink);
-      border-radius: 10px;
-      padding: 0.55rem 0.8rem;
-      min-width: 11rem;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 600;
+      transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
     }
 
-    select:focus {
-      outline: none;
-      border-color: rgba(200, 204, 212, 0.55);
-      box-shadow: 0 0 0 3px rgba(200, 204, 212, 0.12);
+    .expert-chip:hover span {
+      border-color: rgba(200, 204, 212, 0.4);
+      color: var(--silver);
     }
 
-    select option {
-      background: #111;
-      color: var(--ink);
+    .expert-chip input:checked + span {
+      color: #0a0a0c;
+      background: linear-gradient(135deg, #9aa0aa 0%, #e8ebf0 45%, #b8bec8 100%);
+      border-color: transparent;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2), 0 6px 18px rgba(200, 204, 212, 0.18);
+    }
+
+    .expert-chip input:focus-visible + span {
+      outline: 2px solid var(--silver);
+      outline-offset: 2px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
     }
 
     button {
@@ -188,6 +219,11 @@
     }
 
     button:active { transform: scale(0.97); }
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
 
     .btn-primary {
       position: relative;
@@ -210,7 +246,7 @@
       animation: btnShine 2.8s ease-in-out infinite;
     }
 
-    .btn-primary:hover {
+    .btn-primary:hover:not(:disabled) {
       box-shadow:
         0 0 0 1px rgba(255, 255, 255, 0.35),
         0 10px 36px rgba(220, 224, 232, 0.35);
@@ -222,18 +258,26 @@
       border: 1px solid rgba(200, 204, 212, 0.35);
     }
 
-    .btn-ghost:hover {
+    .btn-ghost:hover:not(:disabled) {
       background: rgba(200, 204, 212, 0.08);
       border-color: rgba(200, 204, 212, 0.65);
       box-shadow: 0 0 20px rgba(200, 204, 212, 0.12);
     }
 
-    .week {
+    .hint {
+      text-align: center;
+      color: var(--bad);
+      font-size: 0.9rem;
+      margin-top: 0.85rem;
+      min-height: 1.25rem;
+    }
+
+    .result {
       display: grid;
       gap: 1rem;
     }
 
-    .day {
+    .panel {
       position: relative;
       background: var(--card);
       backdrop-filter: blur(10px);
@@ -245,7 +289,7 @@
       animation: riseSilver 0.65s ease both;
     }
 
-    .day::before {
+    .panel::before {
       content: "";
       position: absolute;
       top: 0;
@@ -256,22 +300,7 @@
       animation: borderGlow 3.2s ease-in-out infinite;
     }
 
-    .day:hover {
-      border-color: rgba(200, 204, 212, 0.35);
-      box-shadow:
-        var(--shadow),
-        0 0 28px rgba(200, 204, 212, 0.08);
-    }
-
-    .day:nth-child(1) { animation-delay: 0.05s; }
-    .day:nth-child(2) { animation-delay: 0.1s; }
-    .day:nth-child(3) { animation-delay: 0.15s; }
-    .day:nth-child(4) { animation-delay: 0.2s; }
-    .day:nth-child(5) { animation-delay: 0.25s; }
-    .day:nth-child(6) { animation-delay: 0.3s; }
-    .day:nth-child(7) { animation-delay: 0.35s; }
-
-    .day-head {
+    .panel-head {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
@@ -279,9 +308,10 @@
       margin-bottom: 0.9rem;
       padding-bottom: 0.65rem;
       border-bottom: 1px solid var(--line);
+      flex-wrap: wrap;
     }
 
-    .day-name {
+    .panel-title {
       font-family: "Cinzel", serif;
       font-size: 1.25rem;
       font-weight: 700;
@@ -289,7 +319,7 @@
       color: var(--silver-bright);
     }
 
-    .theme {
+    .panel-meta {
       font-size: 0.85rem;
       font-weight: 700;
       letter-spacing: 0.04em;
@@ -301,8 +331,6 @@
       animation: silverFlow 3.5s linear infinite;
     }
 
-    .block { margin-top: 0.85rem; }
-
     .label {
       display: inline-block;
       font-size: 0.72rem;
@@ -310,46 +338,96 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--silver);
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.45rem;
       text-shadow: 0 0 12px rgba(200, 204, 212, 0.35);
     }
 
-    .post {
-      font-size: 1.02rem;
-      line-height: 1.45;
-      font-weight: 600;
+    .post-text {
+      font-size: 1.05rem;
+      line-height: 1.55;
       color: var(--ink);
+      white-space: pre-line;
     }
 
-    .stories {
-      list-style: none;
+    .expert-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 1rem;
+    }
+
+    .expert-tags span {
+      font-size: 0.78rem;
+      color: var(--silver-dim);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.25rem 0.65rem;
+    }
+
+    .quiz {
       display: grid;
-      gap: 0.45rem;
-      margin-top: 0.25rem;
+      gap: 1rem;
     }
 
-    .stories li {
-      position: relative;
-      padding-left: 1.1rem;
-      color: var(--muted);
+    .question {
+      padding: 0.85rem 0 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .question:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .question-title {
+      font-weight: 700;
+      margin-bottom: 0.65rem;
       line-height: 1.4;
     }
 
-    .stories li::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0.55em;
-      width: 0.45rem;
-      height: 0.45rem;
-      border-radius: 50%;
-      background: var(--silver);
-      box-shadow: 0 0 8px rgba(200, 204, 212, 0.7);
-      animation: pulseDot 2.4s ease-in-out infinite;
+    .options {
+      display: grid;
+      gap: 0.45rem;
     }
 
-    .stories li:nth-child(2)::before { animation-delay: 0.4s; }
-    .stories li:nth-child(3)::before { animation-delay: 0.8s; }
+    .option {
+      text-align: left;
+      width: 100%;
+      border-radius: 12px;
+      padding: 0.7rem 0.9rem;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      font-weight: 600;
+      box-shadow: none;
+    }
+
+    .option:hover:not(:disabled) {
+      border-color: rgba(200, 204, 212, 0.45);
+      background: rgba(200, 204, 212, 0.08);
+    }
+
+    .option.is-correct {
+      border-color: rgba(143, 188, 143, 0.7);
+      background: rgba(143, 188, 143, 0.12);
+      color: #d8efd8;
+    }
+
+    .option.is-wrong {
+      border-color: rgba(196, 122, 122, 0.7);
+      background: rgba(196, 122, 122, 0.12);
+      color: #f0d0d0;
+    }
+
+    .feedback {
+      margin-top: 0.55rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      min-height: 1.2rem;
+    }
+
+    .feedback.ok { color: var(--ok); }
+    .feedback.bad { color: var(--bad); }
 
     .empty {
       text-align: center;
@@ -400,11 +478,6 @@
       50% { opacity: 1; }
     }
 
-    @keyframes pulseDot {
-      0%, 100% { opacity: 0.55; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.25); }
-    }
-
     @keyframes sparkle {
       0%, 100% { opacity: 0; transform: scale(0.6); }
       40%, 60% { opacity: 0.9; transform: scale(1); }
@@ -416,10 +489,10 @@
     }
 
     @media (max-width: 560px) {
-      .day-head { flex-direction: column; align-items: flex-start; }
-      .controls { flex-direction: column; }
-      select, button { width: 100%; }
+      .actions { flex-direction: column; }
+      button { width: 100%; }
       .brand { letter-spacing: 0.14em; }
+      .panel-head { flex-direction: column; align-items: flex-start; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -440,291 +513,519 @@
     <header>
       <h1 class="brand">ЧУДЕСА</h1>
       <div class="brand-line" aria-hidden="true"></div>
-      <p class="subtitle">Генератор идей: 1 пост + 3 сторис на каждый день недели</p>
+      <p class="subtitle">Выбери экспертов — получи пост на день 1 и вовлекающий мини-тест</p>
     </header>
 
     <div class="controls">
-      <label>
-        Ниша
-        <select id="niche">
-          <option value="lifestyle">Лайфстайл</option>
-          <option value="beauty">Красота</option>
-          <option value="food">Еда</option>
-          <option value="travel">Путешествия</option>
-          <option value="business">Бизнес / эксперт</option>
-          <option value="mom">Мамы / семья</option>
-          <option value="mind">Психология / саморазвитие</option>
-        </select>
-      </label>
-      <button class="btn-primary" id="generate" type="button">Сгенерировать неделю</button>
-      <button class="btn-ghost" id="copy" type="button" hidden>Скопировать план</button>
+      <span class="experts-label">Эксперты (можно выбрать несколько)</span>
+      <div class="experts" id="experts"></div>
+      <div class="actions">
+        <button class="btn-primary" id="generate" type="button">Сгенерировать</button>
+        <button class="btn-ghost" id="copy" type="button" hidden>Скопировать контент</button>
+      </div>
+      <p class="hint" id="hint" aria-live="polite"></p>
     </div>
 
-    <div class="week" id="week">
-      <div class="empty">Нажми «Сгенерировать неделю» — появятся идеи на 7 дней</div>
+    <div class="result" id="result">
+      <div class="empty">Выбери одного или нескольких экспертов и нажми «Сгенерировать»</div>
     </div>
   </div>
 
   <script>
-    const DAYS = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
-
-    const THEMES = [
-      "Знакомство", "Польза", "За кулисами", "Эмоция", "Экспертность",
-      "История", "Вовлечение", "Вдохновение", "Результат", "Лёгкость"
+    const EXPERTS = [
+      { id: "photographer", label: "Фотограф" },
+      { id: "psychologist", label: "Психолог" },
+      { id: "trainer", label: "Тренер" },
+      { id: "nutritionist", label: "Нутрициолог" },
+      { id: "stylist", label: "Стилист" },
+      { id: "coach", label: "Коуч" },
+      { id: "makeup", label: "Визажист" }
     ];
 
-    const BANK = {
-      lifestyle: {
-        posts: [
-          "Утро, которое меняет настроение: мой простой ритуал",
-          "5 маленьких чудес обычного дня",
-          "Что я перестала делать — и сразу стало легче",
-          "Домашний уют за 15 минут: чек-лист",
-          "Один предмет, который сделал дом уютнее",
-          "Как я планирую неделю без перфекционизма",
-          "Мой любимый вечер недели — и почему он важен",
-          "Тихие радости, которые я замечаю каждый день"
+    const CONTENT = {
+      photographer: {
+        hooks: [
+          "Свет решает больше, чем камера",
+          "Один кадр может рассказать целую историю",
+          "Красивое фото начинается ещё до нажатия кнопки"
         ],
-        stories: [
-          "Доброе утро + план на день в 3 кадрах",
-          "Что в сумке / на столе сегодня",
-          "Мини-опрос: что выбираешь ты?",
-          "Быстрый лайфхак дня",
-          "Кадр «до / после»",
-          "Музыка дня + настроение",
-          "Вопрос подписчикам в стикере",
-          "Секретный совет вечера",
-          "Кадр из окна / прогулки",
-          "Итог дня в одном предложении"
+        tips: [
+          "снимай у окна — мягкий свет делает лицо живым без фильтров",
+          "оставь в кадре «воздух»: пространство вокруг героя усиливает эмоцию",
+          "попроси модель моргнуть и сразу улыбнуться — получится естественный взгляд"
+        ],
+        quiz: [
+          {
+            q: "Что сильнее влияет на «дорогой» вид фото?",
+            options: ["Разрешение камеры", "Свет и композиция", "Количество лайков"],
+            correct: 1
+          },
+          {
+            q: "Где обычно самый мягкий естественный свет?",
+            options: ["Прямо под полуденным солнцем", "У окна в тени", "Под неоновой вывеской"],
+            correct: 1
+          },
+          {
+            q: "Зачем оставлять пространство вокруг героя?",
+            options: ["Чтобы кадр выглядел пустым", "Чтобы усилить эмоцию и дыхание кадра", "Чтобы скрыть недостатки объектива"],
+            correct: 1
+          },
+          {
+            q: "Что помогает получить естественную улыбку?",
+            options: ["Долго держать улыбку 20 секунд", "Моргнуть и сразу улыбнуться", "Смотреть только в пол"],
+            correct: 1
+          },
+          {
+            q: "Главный секрет портрета для соцсетей?",
+            options: ["Максимум эффектов", "Эмоция и понятный свет", "Чёрно-белый фильтр всегда"],
+            correct: 1
+          }
         ]
       },
-      beauty: {
-        posts: [
-          "Уход, который реально работает: мой честный разбор",
-          "Чудо-трансформация за 7 дней: что изменилось",
-          "3 ошибки в макияже, которые я больше не делаю",
-          "Бюджетный продукт vs люкс — что выиграло",
-          "Ритуал вечернего ухода без спешки",
-          "Как я выбираю аромат под настроение",
-          "Моя «капсула» косметики на неделю",
-          "Кожа после стресса: что помогло быстрее всего"
+      psychologist: {
+        hooks: [
+          "Спокойствие — это навык, а не случайность",
+          "Маленький шаг часто сильнее большого рывка",
+          "То, как мы говорим с собой, меняет день"
         ],
-        stories: [
-          "Свачи / текстура продукта крупным планом",
-          "Наношу средство — короткий процесс",
-          "До / после на одном лице",
-          "Опрос: какой продукт взять в путешествие?",
-          "Совет по нанесению за 15 секунд",
-          "Что в косметичке сегодня",
-          "Отзыв честный: купила бы снова?",
-          "Макияж за 60 секунд",
-          "Вопрос: сухая или жирная кожа?",
-          "Вечерний уход — 3 шага"
+        tips: [
+          "замечай первые признаки напряжения: сжатые плечи, поверхностное дыхание",
+          "задай себе вопрос: «Что мне нужно прямо сейчас — отдых, граница или действие?»",
+          "замени «я должен» на «я выбираю» — появляется ощущение опоры"
+        ],
+        quiz: [
+          {
+            q: "Что чаще всего помогает быстрее снизить тревогу?",
+            options: ["Игнор своих чувств", "Заметить телесные сигналы и замедлиться", "Спорить с тревогой до победы"],
+            correct: 1
+          },
+          {
+            q: "Почему «маленькие шаги» работают?",
+            options: ["Они выглядят красиво в сторис", "Снижают сопротивление и дают ощущение прогресса", "Заменяют всю терапию"],
+            correct: 1
+          },
+          {
+            q: "Фраза «я выбираю» вместо «я должен» даёт…",
+            options: ["Чувство контроля и опоры", "Больше вины", "Полное отсутствие ответственности"],
+            correct: 0
+          },
+          {
+            q: "Что полезно спросить себя в сложный момент?",
+            options: ["Почему со мной всегда так?", "Что мне нужно прямо сейчас?", "Кто виноват?"],
+            correct: 1
+          },
+          {
+            q: "Спокойствие — это…",
+            options: ["Только врождённая черта", "Навык, который можно тренировать", "Признак слабости"],
+            correct: 1
+          }
         ]
       },
-      food: {
-        posts: [
-          "Рецепт за 20 минут, который спасает будни",
-          "Завтрак-чудо: сытно, красиво, просто",
-          "Как я собираю тарелку «как в кафе» дома",
-          "Один продукт — три блюда на неделю",
-          "Сладкое без чувства вины: мой любимый вариант",
-          "Что приготовить, когда совсем нет сил",
-          "Семейный ужин, который все просят повторить",
-          "Список покупок на неделю без хаоса"
+      trainer: {
+        hooks: [
+          "Сила растёт не от идеальной тренировки, а от регулярности",
+          "Тело отвечает на внимание быстрее, чем на давление",
+          "Короткая, но честная сессия лучше пропущенного дня"
         ],
-        stories: [
-          "Ингредиенты на столе — старт готовки",
-          "Процесс: нарезка / замес / обжарка",
-          "Готовое блюдо + крупный план",
-          "Опрос: сладкое или солёное?",
-          "Лайфхак на кухне дня",
-          "Что в холодильнике сегодня",
-          "Дегустация: оценка от 1 до 10",
-          "Рецепт в стикерах (шаги)",
-          "Завтрак в кадре",
-          "Вечерний чай / десерт"
+        tips: [
+          "начни с разминки 3–5 минут — суставы и нервная система скажут «спасибо»",
+          "следи за техникой: качество повторения важнее количества",
+          "после нагрузки сделай 2 минуты спокойного дыхания — восстановление начинается сразу"
+        ],
+        quiz: [
+          {
+            q: "Что важнее для прогресса в долгую?",
+            options: ["Идеальная тренировка раз в месяц", "Регулярность", "Только тяжёлые веса"],
+            correct: 1
+          },
+          {
+            q: "Зачем нужна разминка?",
+            options: ["Чтобы потратить время", "Чтобы подготовить суставы и нервную систему", "Чтобы сразу устать"],
+            correct: 1
+          },
+          {
+            q: "Что выбрать: много кривых повторов или меньше, но чистых?",
+            options: ["Больше любой ценой", "Меньше, но с техникой", "Без разницы"],
+            correct: 1
+          },
+          {
+            q: "Когда начинается восстановление?",
+            options: ["Только на следующий день", "Сразу после нагрузки", "Только в отпуске"],
+            correct: 1
+          },
+          {
+            q: "Лучшая стратегия «нет сил»?",
+            options: ["Пропустить совсем", "Сделать короткую честную сессию", "Удвоить нагрузку из чувства вины"],
+            correct: 1
+          }
         ]
       },
-      travel: {
-        posts: [
-          "Маршрут выходного дня: мало времени — много впечатлений",
-          "Место, которое выглядит как чудо — и как туда доехать",
-          "Что взять с собой: мой проверенный минимум",
-          "Ошибка туриста, которую я больше не повторяю",
-          "Кафе / вид / прогулка: идеальный день в городе",
-          "Как я выбираю жильё без разочарований",
-          "Фото-гид: 5 точек для красивых кадров",
-          "Бюджет поездки: куда уходят деньги на самом деле"
+      nutritionist: {
+        hooks: [
+          "Еда — это энергия и забота, а не поле битвы",
+          "Стабильный рацион сильнее жёстких запретов",
+          "Тарелка может быть и вкусной, и поддерживающей"
         ],
-        stories: [
-          "Сборы: что в рюкзаке",
-          "Дорога / вид из окна",
-          "Локация дня + геометка",
-          "Опрос: море или горы?",
-          "Совет путешественника за 10 секунд",
-          "Еда в поездке — честный кадр",
-          "Карта дня / план маршрута",
-          "Закат / рассвет — атмосфера",
-          "Вопрос: куда ехать следующим?",
-          "Итог дня в 1 эмодзи + текст"
+        tips: [
+          "собери тарелку по принципу: белок + овощи + сложный углевод",
+          "пей воду до ощущения жажды — энергия часто падает от обезвоживания",
+          "добавь один «якорь» дня: нормальный завтрак, который реально съедаешь"
+        ],
+        quiz: [
+          {
+            q: "Что устойчивее жёстких запретов?",
+            options: ["Полный отказ от любимых блюд", "Стабильный понятный рацион", "Голодание по настроению"],
+            correct: 1
+          },
+          {
+            q: "Базовый принцип сытной тарелки?",
+            options: ["Только салат", "Белок + овощи + сложный углевод", "Только сладкое «за компанию»"],
+            correct: 1
+          },
+          {
+            q: "Почему вода важна для энергии?",
+            options: ["Она калорийна", "Обезвоживание часто маскируется под усталость", "Она заменяет еду"],
+            correct: 1
+          },
+          {
+            q: "Что такое «якорь» дня в питании?",
+            options: ["Случайный перекус ночью", "Один стабильный приём пищи, который держишь", "Только кофе"],
+            correct: 1
+          },
+          {
+            q: "Здоровое питание в первую очередь про…",
+            options: ["Наказание себя", "Поддержку энергии и заботу", "Идеальные фото еды"],
+            correct: 1
+          }
         ]
       },
-      business: {
-        posts: [
-          "Как я упаковала услугу так, что стало понятно за 10 секунд",
-          "Кейс: маленькое действие — заметный результат",
-          "Ошибки в контенте, которые съедают продажи",
-          "Мой чек-лист недели эксперта",
-          "Как я беру цену без стыда",
-          "Что отвечать на «дорого» — мягкий скрипт",
-          "За кулисами: как выглядит мой рабочий день",
-          "Инструмент, который сэкономил мне часы"
+      stylist: {
+        hooks: [
+          "Стиль — это ясность образа, а не количество вещей",
+          "Один сильный акцент собирает весь look",
+          "Уверенность в образе начинается с посадки"
         ],
-        stories: [
-          "Утро эксперта: план задач",
-          "Кадр рабочего стола / ноутбука",
-          "Мини-совет по нише",
-          "Опрос: какая боль актуальнее?",
-          "Отзыв клиента (скрин / цитата)",
-          "Анонс поста / эфира",
-          "FAQ: один частый вопрос",
-          "Цифра дня (результат)",
-          "За кулисами съёмки / созвона",
-          "Призыв: напиши «хочу» в директ"
+        tips: [
+          "выбери базу нейтральных вещей и добавь 1 акцент цвета или фактуры",
+          "проверь посадку в зеркале сбоку и сзади — так видно правду о силуэте",
+          "повторяй удачные сочетания: стиль растёт из повторяемых решений"
+        ],
+        quiz: [
+          {
+            q: "Что делает образ собранным быстрее всего?",
+            options: ["Максимум трендов сразу", "Один сильный акцент на спокойной базе", "Случайный шопинг"],
+            correct: 1
+          },
+          {
+            q: "Почему важна посадка?",
+            options: ["Только для фото", "Она влияет на силуэт и ощущение уверенности", "Она не важна"],
+            correct: 1
+          },
+          {
+            q: "Как быстрее найти «свой» стиль?",
+            options: ["Покупать всё новое", "Повторять удачные сочетания", "Игнорировать комфорт"],
+            correct: 1
+          },
+          {
+            q: "Нейтральная база нужна, чтобы…",
+            options: ["Выглядеть скучно", "Легко добавлять акценты", "Носить только чёрное"],
+            correct: 1
+          },
+          {
+            q: "Стиль в первую очередь — это…",
+            options: ["Цена бренда", "Ясность образа", "Количество вещей в шкафу"],
+            correct: 1
+          }
         ]
       },
-      mom: {
-        posts: [
-          "Как мы устраиваем маленькие чудеса в обычных буднях",
-          "Ритуал с ребёнком, который занимает 10 минут",
-          "Честно: что я упростила в материнстве",
-          "Идея совместного вечера без гаджетов",
-          "Как я сохраняю себя, когда день «на нуле»",
-          "Домашняя традиция выходного дня",
-          "Что реально помогает при капризах",
-          "Наш семейный плейлист спокойствия"
+      coach: {
+        hooks: [
+          "Цель становится реальной, когда у неё есть ближайший шаг",
+          "Фокус важнее мотивации",
+          "Прогресс любит ясность и честные сроки"
         ],
-        stories: [
-          "Доброе утро семьи",
-          "Момент дня: улыбка / объятие",
-          "Опрос мам: что сложнее сегодня?",
-          "Лайфхак с детьми за 15 секунд",
-          "Завтрак / перекус в кадре",
-          "Прогулка — 2–3 кадра",
-          "Вопрос: как вы отдыхаете?",
-          "Вечерняя рутина",
-          "Честный кадр «без фильтров»",
-          "Итог дня: за что я благодарна"
+        tips: [
+          "сформулируй цель на неделю одним предложением",
+          "выдели 1 ключевое действие на сегодня — и сделай его первым",
+          "вечером отметь факт выполнения: мозг учится на доказательствах"
+        ],
+        quiz: [
+          {
+            q: "Что превращает мечту в движение?",
+            options: ["Только вдохновение", "Ближайший конкретный шаг", "Ожидание идеального момента"],
+            correct: 1
+          },
+          {
+            q: "Что важнее постоянной мотивации?",
+            options: ["Фокус и система", "Ждать подъёма", "Сравнивать себя с другими"],
+            correct: 0
+          },
+          {
+            q: "Зачем формулировать цель на неделю?",
+            options: ["Чтобы красиво звучало", "Чтобы сузить фокус и измерить прогресс", "Чтобы усложнить жизнь"],
+            correct: 1
+          },
+          {
+            q: "Куда поставить ключевое действие дня?",
+            options: ["В конец списка «если успею»", "Первым делом", "Только на выходные"],
+            correct: 1
+          },
+          {
+            q: "Зачем отмечать выполнение?",
+            options: ["Для галочки в чужих глазах", "Чтобы мозг учился на доказательствах", "Это лишнее"],
+            correct: 1
+          }
         ]
       },
-      mind: {
-        posts: [
-          "Практика на 5 минут, которая возвращает спокойствие",
-          "Как я замечаю чудеса в серых днях",
-          "Мысль, которая меня освободила",
-          "Антистресс-план на неделю",
-          "Почему «маленькие шаги» работают лучше рывков",
-          "Как я разговариваю с собой в трудный день",
-          "Границы: фраза, которую я наконец сказала",
-          "Вечерняя рефлексия: 3 вопроса себе"
+      makeup: {
+        hooks: [
+          "Макияж усиливает лицо, а не маскирует человека",
+          "Светлая кожа и аккуратные брови делают больше, чем 10 продуктов",
+          "Стойкость начинается с подготовки кожи"
         ],
-        stories: [
-          "Утренняя аффирмация / мысль дня",
-          "Дыхание: 3 шага на экране",
-          "Опрос: что тревожит сейчас?",
-          "Цитата + короткое пояснение",
-          "Мини-практика «здесь и сейчас»",
-          "Честный статус дня",
-          "Совет, если энергия на нуле",
-          "Вопрос подписчикам в стикере",
-          "Вечерняя благодарность",
-          "Напоминание: тебе можно медленно"
+        tips: [
+          "увлажни кожу до тона — так финиш выглядит дороже",
+          "ставь акцент либо на глаза, либо на губы — образ читается яснее",
+          "проверяй макияж при дневном свете: телефон часто обманывает"
+        ],
+        quiz: [
+          {
+            q: "С чего начинается стойкий макияж?",
+            options: ["С максимального слоя пудры", "С подготовки и увлажнения кожи", "С самого яркого пигмента"],
+            correct: 1
+          },
+          {
+            q: "Как сделать образ чище?",
+            options: ["Акцент и на глаза, и на губы сразу", "Выбрать один главный акцент", "Добавить всё, что есть"],
+            correct: 1
+          },
+          {
+            q: "Где лучше проверять макияж?",
+            options: ["Только в тёмном кафе", "При дневном свете", "Только через beauty-фильтр"],
+            correct: 1
+          },
+          {
+            q: "Что часто «делает» лицо без сложных техник?",
+            options: ["10 слоёв контуринга", "Ухоженная кожа и аккуратные брови", "Только чёрная подводка"],
+            correct: 1
+          },
+          {
+            q: "Главная роль макияжа?",
+            options: ["Спрятать личность", "Усилить лицо и настроение", "Повторить чужой тренд 1 в 1"],
+            correct: 1
+          }
         ]
       }
     };
 
-    const nicheEl = document.getElementById("niche");
-    const weekEl = document.getElementById("week");
+    const expertsEl = document.getElementById("experts");
+    const resultEl = document.getElementById("result");
     const generateBtn = document.getElementById("generate");
     const copyBtn = document.getElementById("copy");
+    const hintEl = document.getElementById("hint");
 
-    let lastPlan = null;
+    let lastContent = null;
 
-    function pick(arr, used) {
-      const available = arr.filter((x) => !used.has(x));
-      const pool = available.length ? available : arr;
-      const item = pool[Math.floor(Math.random() * pool.length)];
-      used.add(item);
-      return item;
+    function shuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
     }
 
-    function generateWeek(niche) {
-      const data = BANK[niche];
-      const usedPosts = new Set();
-      const usedStories = new Set();
-      const usedThemes = new Set();
+    function pick(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
 
-      return DAYS.map((day) => {
-        const theme = pick(THEMES, usedThemes);
-        const post = pick(data.posts, usedPosts);
-        const stories = [0, 1, 2].map(() => pick(data.stories, usedStories));
-        return { day, theme, post, stories };
+    function selectedExperts() {
+      return [...expertsEl.querySelectorAll("input:checked")].map((input) => {
+        const meta = EXPERTS.find((e) => e.id === input.value);
+        return { id: input.value, label: meta.label };
       });
     }
 
-    function render(plan) {
-      weekEl.innerHTML = plan.map(({ day, theme, post, stories }) => `
-        <article class="day">
-          <div class="day-head">
-            <h2 class="day-name">${day}</h2>
-            <span class="theme">${theme}</span>
-          </div>
-          <div class="block">
-            <span class="label">Пост</span>
-            <p class="post">${post}</p>
-          </div>
-          <div class="block">
-            <span class="label">Сторис × 3</span>
-            <ul class="stories">
-              ${stories.map((s) => `<li>${s}</li>`).join("")}
-            </ul>
-          </div>
-        </article>
+    function buildPost(experts) {
+      const labels = experts.map((e) => e.label.toLowerCase()).join(", ");
+      const hooks = experts.map((e) => pick(CONTENT[e.id].hooks));
+      const tips = experts.flatMap((e) => CONTENT[e.id].tips);
+      const chosenTips = shuffle(tips).slice(0, Math.min(3, tips.length));
+
+      const intro = experts.length === 1
+        ? `${hooks[0]}.`
+        : `Сегодня — взгляд сразу нескольких экспертов: ${labels}.`;
+
+      const body = chosenTips
+        .map((tip, i) => `${i + 1}) ${tip.charAt(0).toUpperCase()}${tip.slice(1)}.`)
+        .join("\n");
+
+      const outro = experts.length === 1
+        ? `Сохрани и попробуй один приём уже сегодня — потом проверь себя в мини-тесте ниже.`
+        : `Возьми один совет от каждого направления и собери свой ритуал дня. А в конце — мини-тест, чтобы закрепить.`;
+
+      return [
+        `День 1 · познавательный пост`,
+        ``,
+        intro,
+        ``,
+        body,
+        ``,
+        outro,
+        ``,
+        `А тебе что ближе — практика сразу или сначала теория? Напиши в комментариях.`
+      ].join("\n");
+    }
+
+    function buildQuiz(experts) {
+      const pool = experts.flatMap((e) =>
+        CONTENT[e.id].quiz.map((item) => ({ ...item, expert: e.label }))
+      );
+      return shuffle(pool).slice(0, 5).map((item) => {
+        const indexed = item.options.map((text, idx) => ({ text, idx }));
+        const shuffled = shuffle(indexed);
+        const correct = shuffled.findIndex((opt) => opt.idx === item.correct);
+        return {
+          q: item.q,
+          expert: item.expert,
+          options: shuffled.map((opt) => opt.text),
+          correct
+        };
+      });
+    }
+
+    function generateContent(experts) {
+      return {
+        experts,
+        post: buildPost(experts),
+        quiz: buildQuiz(experts)
+      };
+    }
+
+    function renderExperts() {
+      expertsEl.innerHTML = EXPERTS.map((expert) => `
+        <label class="expert-chip">
+          <input type="checkbox" name="expert" value="${expert.id}" />
+          <span>${expert.label}</span>
+        </label>
       `).join("");
     }
 
-    function planToText(plan, nicheLabel) {
-      const lines = [`ЧУДЕСА — контент-план на неделю`, `Ниша: ${nicheLabel}`, ""];
-      plan.forEach(({ day, theme, post, stories }) => {
-        lines.push(`${day} — ${theme}`);
-        lines.push(`Пост: ${post}`);
-        lines.push(`Сторис 1: ${stories[0]}`);
-        lines.push(`Сторис 2: ${stories[1]}`);
-        lines.push(`Сторис 3: ${stories[2]}`);
+    function render(content) {
+      const tags = content.experts.map((e) => `<span>${e.label}</span>`).join("");
+      const quizHtml = content.quiz.map((item, qi) => `
+        <div class="question" data-question="${qi}">
+          <p class="question-title">${qi + 1}. ${item.q}</p>
+          <div class="options">
+            ${item.options.map((opt, oi) => `
+              <button
+                type="button"
+                class="option"
+                data-question="${qi}"
+                data-option="${oi}"
+              >${opt}</button>
+            `).join("")}
+          </div>
+          <p class="feedback" data-feedback="${qi}"></p>
+        </div>
+      `).join("");
+
+      resultEl.innerHTML = `
+        <article class="panel">
+          <div class="panel-head">
+            <h2 class="panel-title">День 1</h2>
+            <span class="panel-meta">Пост · познавательное · вовлечение</span>
+          </div>
+          <span class="label">Пост</span>
+          <p class="post-text">${content.post}</p>
+          <div class="expert-tags">${tags}</div>
+        </article>
+        <article class="panel">
+          <div class="panel-head">
+            <h2 class="panel-title">Мини-тест</h2>
+            <span class="panel-meta">5 вопросов · 3 варианта</span>
+          </div>
+          <p class="label">Выбери ответ — сразу увидишь правильный</p>
+          <div class="quiz">${quizHtml}</div>
+        </article>
+      `;
+    }
+
+    function contentToText(content) {
+      const lines = [
+        "ЧУДЕСА — контент на день 1",
+        `Эксперты: ${content.experts.map((e) => e.label).join(", ")}`,
+        "",
+        content.post,
+        "",
+        "Мини-тест:"
+      ];
+      content.quiz.forEach((item, i) => {
+        lines.push(`${i + 1}. ${item.q}`);
+        item.options.forEach((opt, oi) => {
+          const mark = oi === item.correct ? " ✓" : "";
+          lines.push(`   ${String.fromCharCode(65 + oi)}) ${opt}${mark}`);
+        });
         lines.push("");
       });
       return lines.join("\n");
     }
 
+    resultEl.addEventListener("click", (event) => {
+      const btn = event.target.closest(".option");
+      if (!btn || !lastContent) return;
+
+      const qi = Number(btn.dataset.question);
+      const oi = Number(btn.dataset.option);
+      const question = lastContent.quiz[qi];
+      if (!question || question.answered) return;
+
+      question.answered = true;
+      const root = resultEl.querySelector(`[data-question="${qi}"]`);
+      const feedback = resultEl.querySelector(`[data-feedback="${qi}"]`);
+      const options = root.querySelectorAll(".option");
+
+      options.forEach((option) => {
+        option.disabled = true;
+        const idx = Number(option.dataset.option);
+        if (idx === question.correct) option.classList.add("is-correct");
+        if (idx === oi && oi !== question.correct) option.classList.add("is-wrong");
+      });
+
+      if (oi === question.correct) {
+        feedback.textContent = "Верно! Так держать.";
+        feedback.className = "feedback ok";
+      } else {
+        feedback.textContent = `Правильный ответ: ${question.options[question.correct]}`;
+        feedback.className = "feedback bad";
+      }
+    });
+
     generateBtn.addEventListener("click", () => {
-      lastPlan = generateWeek(nicheEl.value);
-      render(lastPlan);
+      const experts = selectedExperts();
+      if (!experts.length) {
+        hintEl.textContent = "Выбери хотя бы одного эксперта";
+        return;
+      }
+      hintEl.textContent = "";
+      lastContent = generateContent(experts);
+      render(lastContent);
       copyBtn.hidden = false;
-      copyBtn.textContent = "Скопировать план";
+      copyBtn.textContent = "Скопировать контент";
     });
 
     copyBtn.addEventListener("click", async () => {
-      if (!lastPlan) return;
-      const label = nicheEl.options[nicheEl.selectedIndex].text;
+      if (!lastContent) return;
       try {
-        await navigator.clipboard.writeText(planToText(lastPlan, label));
+        await navigator.clipboard.writeText(contentToText(lastContent));
         copyBtn.textContent = "Скопировано";
-        setTimeout(() => { copyBtn.textContent = "Скопировать план"; }, 1600);
+        setTimeout(() => { copyBtn.textContent = "Скопировать контент"; }, 1600);
       } catch {
         copyBtn.textContent = "Не удалось скопировать";
       }
     });
+
+    renderExperts();
   </script>
 </body>
 </html>
